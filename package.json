@@ -11,7 +11,8 @@
 	"scripts": {
 		"dev": "tsc -p tsconfig.server.json -w",
 		"build": "tsc -p tsconfig.server.json",
-		"format": "prettier . --write"
+		"format": "prettier . --write",
+		"prepare": "npm run build"
 	},
 	"dependencies": {
 		"@strapi/design-system": "^1.19.0",
