@@ -1,6 +1,6 @@
 {
 	"name": "strapi-azerothcore",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "AzerothCore integration for Strapi.",
 	"strapi": {
 		"name": "strapi-azerothcore",
