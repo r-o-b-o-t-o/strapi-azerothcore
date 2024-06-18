@@ -3,7 +3,7 @@
 	"version": "1.0.1",
 	"description": "AzerothCore integration for Strapi.",
 	"strapi": {
-		"name": "strapi-azerothCore",
+		"name": "strapi-azerothcore",
 		"displayName": "AzerothCore",
 		"description": "AzerothCore integration for Strapi.",
 		"kind": "plugin"
