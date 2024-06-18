@@ -1,0 +1,9 @@
+#strapi-azerothcore-github-btn .btn-container {
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+}
+
+#strapi-azerothcore-github-btn .btn-text {
+	margin-left: 8px;
+}
