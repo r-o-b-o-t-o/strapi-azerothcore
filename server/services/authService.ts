@@ -107,6 +107,12 @@ export class AuthService {
 		await this.db.deleteAccount(username);
 	}
 
+	public async changePassword(username: string, newPassword: string) {
+		const salt = this.generateSalt();
+		const verifier = this.createVerifier(username, newPassword, salt);
+		await this.db.setPassword(username, salt, verifier);
+	}
+
 	private createVerifier(username: string, password: string, salt?: Buffer): Buffer {
 		// Based on https://gist.github.com/Treeston/db44f23503ae9f1542de31cb8d66781e
 

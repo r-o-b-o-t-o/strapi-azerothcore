@@ -19,6 +19,10 @@ export class AuthDbService extends DbServiceBase {
 		await this.db.query("UPDATE account SET reg_mail = ? WHERE username LIKE ?", [email, username]);
 	}
 
+	public async setPassword(username: string, salt: Buffer, verifier: Buffer) {
+		await this.db.query("UPDATE account SET salt = ?, verifier = ? WHERE username LIKE ?", [salt, verifier, username]);
+	}
+
 	public async createAccount(username: string, email: string, expansion: number, salt: Buffer, verifier: Buffer) {
 		await this.db.query(
 			"INSERT INTO account (username, email, reg_mail, salt, verifier, expansion, joindate) VALUES(UPPER(?), ?, ?, ?, ?, ?, NOW())",

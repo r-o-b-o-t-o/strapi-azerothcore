@@ -67,9 +67,24 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		}
 	},
 
-	resetPassword(ctx) {
-		// TODO
-		ctx.body = "";
+	async resetPassword(ctx: Context, next: Next) {
+		const { password, passwordConfirmation, code } = (ctx.request as any).body;
+
+		const auth = AzerothCorePlugin.authService();
+		try {
+			auth.validatePassword(password, passwordConfirmation);
+		} catch (error) {
+			return ctx.badRequest(error);
+		}
+
+		const user = await strapi
+			.query("plugin::users-permissions.user")
+			.findOne({ where: { resetPasswordToken: code } });
+
+		const strapiAuthController = strapi.controller("plugin::users-permissions.auth");
+		await strapiAuthController.resetPassword(ctx, next);
+
+		await auth.changePassword(user.username, password);
 	},
 
 	changePassword(ctx) {

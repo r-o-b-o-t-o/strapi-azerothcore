@@ -21,7 +21,7 @@ export default {
 				},
 			},
 			{
-				method: "GET",
+				method: "POST",
 				path: "/auth/reset-password",
 				handler: "auth.resetPassword",
 				config: {
