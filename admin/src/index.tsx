@@ -5,16 +5,14 @@ import pluginPkg from "../../package.json";
 import PluginIcon from "./components/PluginIcon";
 import Initializer from "./components/Initializer";
 
-const name = pluginPkg.strapi.name;
-
 export default {
 	register(app: any) {
 		app.addMenuLink({
 			to: `/plugins/${pluginId}`,
 			icon: PluginIcon,
 			intlLabel: {
-				id: `${pluginId}.plugin.name`,
-				defaultMessage: name,
+				id: `${pluginId}.plugin.displayName`,
+				defaultMessage: pluginPkg.strapi.displayName,
 			},
 			Component: async () => {
 				const component = await import("./pages/App");
@@ -26,7 +24,7 @@ export default {
 		app.registerPlugin({
 			id: pluginId,
 			initializer: Initializer,
-			name,
+			name: pluginPkg.strapi.name,
 		});
 	},
 

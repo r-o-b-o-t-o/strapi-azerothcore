@@ -9,7 +9,13 @@ import { AzerothCorePlugin } from "../AzerothCorePlugin";
 const { ValidationError } = errors;
 
 export class AuthService {
+	private strapi: Strapi;
 	private authDb: AuthDbService;
+	private readonly confirmationBanReason = "STRAPI-AZEROTHCORE_CONFIRMATION";
+
+	public constructor(strapi: Strapi) {
+		this.strapi = strapi;
+	}
 
 	public async load() {
 		const settings = await AzerothCorePlugin.settingsService().getSettings();
@@ -80,6 +86,20 @@ export class AuthService {
 		const salt = this.generateSalt();
 		const verifier = this.createVerifier(username, password, salt);
 		await this.db.createAccount(username, email, salt, verifier);
+		if (await this.isEmailConfirmationEnabled()) {
+			await this.db.banAccount(username, null, this.confirmationBanReason);
+		}
+	}
+
+	public async confirmAccount(username: string) {
+		await this.db.unbanAccountForReason(username, this.confirmationBanReason);
+	}
+
+	public async isEmailConfirmationEnabled() {
+		const settings: any = await this.strapi
+			.store({ type: "plugin", name: "users-permissions" })
+			.get({ key: "advanced" });
+		return !!settings.email_confirmation;
 	}
 
 	public async deleteAccount(username: string) {
@@ -131,4 +151,4 @@ export class AuthService {
 	}
 }
 
-export default ({ strapi }: { strapi: Strapi }) => new AuthService();
+export default ({ strapi }: { strapi: Strapi }) => new AuthService(strapi);

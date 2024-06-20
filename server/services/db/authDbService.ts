@@ -34,7 +34,7 @@ export class AuthDbService extends DbServiceBase {
 	public async createAccount(username: string, email: string, salt: Buffer, verifier: Buffer) {
 		const expansion = 2; // WotLK
 		await this.db.query(
-			"INSERT INTO account(username, email, reg_mail, salt, verifier, expansion, joindate) VALUES(UPPER(?), ?, ?, ?, ?, ?, NOW())",
+			"INSERT INTO account (username, email, reg_mail, salt, verifier, expansion, joindate) VALUES(UPPER(?), ?, ?, ?, ?, ?, NOW())",
 			[username, email, email, salt, verifier, expansion]
 		);
 		await this.db.query(
@@ -64,5 +64,34 @@ export class AuthDbService extends DbServiceBase {
 		}
 		const { id } = rows[0];
 		return id as number;
+	}
+
+	public async banAccount(username: string, unbanDate?: Date, reason?: string) {
+		const accountId = await this.getAccountId(username);
+		if (!accountId) {
+			return;
+		}
+
+		const dateToTimestamp = (date: Date) => Math.round(date.getTime() / 1000);
+		const now = new Date();
+		const banTimestamp = dateToTimestamp(now);
+		const unbanTimestamp = dateToTimestamp(unbanDate ?? now);
+
+		await this.db.query(
+			"INSERT INTO account_banned (id, bandate, unbandate, bannedby, banreason, active) VALUES (?, ?, ?, '', ?, 1)",
+			[accountId, banTimestamp, unbanTimestamp, reason ?? ""]
+		);
+	}
+
+	public async unbanAccountForReason(username: string, reason: string) {
+		const accountId = await this.getAccountId(username);
+		if (!accountId) {
+			return;
+		}
+
+		await this.db.query("DELETE FROM account_banned WHERE id = ? AND banreason = ?", [
+			accountId,
+			reason ?? "",
+		]);
 	}
 }
