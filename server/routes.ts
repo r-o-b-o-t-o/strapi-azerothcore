@@ -26,12 +26,21 @@ export default {
 				handler: "auth.resetPassword",
 				config: {
 					policies: [],
+					auth: false,
 				},
 			},
 			{
 				method: "POST",
 				path: "/auth/change-password",
 				handler: "auth.changePassword",
+				config: {
+					policies: [],
+				},
+			},
+			{
+				method: "POST",
+				path: "/auth/change-email",
+				handler: "auth.changeEmail",
 				config: {
 					policies: [],
 				},

@@ -88,8 +88,12 @@ export class AuthService {
 		const verifier = this.createVerifier(username, password, salt);
 		await this.db.createAccount(username, email, this.expansionWotlk, salt, verifier);
 		if (await this.isEmailConfirmationEnabled()) {
-			await this.db.banAccount(username, null, this.confirmationBanReason);
+			await this.unconfirmAccount(username);
 		}
+	}
+
+	public async unconfirmAccount(username: string) {
+		await this.db.banAccount(username, null, this.confirmationBanReason);
 	}
 
 	public async confirmAccount(username: string) {
@@ -111,6 +115,14 @@ export class AuthService {
 		const salt = this.generateSalt();
 		const verifier = this.createVerifier(username, newPassword, salt);
 		await this.db.setPassword(username, salt, verifier);
+	}
+
+	public async changeEmail(username: string, newEmail: string) {
+		await this.db.setEmail(username, newEmail);
+
+		if (await this.isEmailConfirmationEnabled()) {
+			await this.unconfirmAccount(username);
+		}
 	}
 
 	private createVerifier(username: string, password: string, salt?: Buffer): Buffer {

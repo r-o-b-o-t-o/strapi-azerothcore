@@ -103,4 +103,44 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
 		await auth.changePassword(user.username, password);
 	},
+
+	async changeEmail(ctx: Context, next: Next) {
+		const email: string = (ctx.request as any).body.email?.trim();
+		const { user } = ctx.state;
+
+		if (!email) {
+			return ctx.badRequest("please enter the new email address");
+		}
+		if (email === user.email) {
+			return ctx.badRequest("the new email address must be different from your current email address");
+		}
+
+		const auth = AzerothCorePlugin.authService();
+		try {
+			await auth.validateEmail(email);
+		} catch (error) {
+			return ctx.badRequest(error);
+		}
+
+		const conflictingUserCount = await strapi.query("plugin::users-permissions.user").count({
+			where: {
+				$or: [{ email: email.toLowerCase() }, { username: email.toLowerCase() }],
+				provider: "email",
+			},
+		});
+		if (conflictingUserCount > 0) {
+			return ctx.badRequest("this email address is already in use");
+		}
+
+		await strapi.plugin("users-permissions").service("user").edit(user.id, {
+			email,
+			confirmed: false,
+		});
+		await auth.changeEmail(user.username, email);
+
+		if (await auth.isEmailConfirmationEnabled()) {
+			const strapiAuthController = strapi.controller("plugin::users-permissions.auth");
+			await strapiAuthController.sendEmailConfirmation(ctx, next);
+		}
+	},
 });
