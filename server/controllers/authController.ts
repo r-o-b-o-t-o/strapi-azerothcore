@@ -87,8 +87,20 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		await auth.changePassword(user.username, password);
 	},
 
-	changePassword(ctx) {
-		// TODO
-		ctx.body = "";
+	async changePassword(ctx: Context, next: Next) {
+		const { password, passwordConfirmation } = (ctx.request as any).body;
+		const { user } = ctx.state;
+
+		const auth = AzerothCorePlugin.authService();
+		try {
+			auth.validatePassword(password, passwordConfirmation);
+		} catch (error) {
+			return ctx.badRequest(error);
+		}
+
+		const strapiAuthController = strapi.controller("plugin::users-permissions.auth");
+		await strapiAuthController.changePassword(ctx, next);
+
+		await auth.changePassword(user.username, password);
 	},
 });

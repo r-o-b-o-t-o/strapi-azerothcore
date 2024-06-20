@@ -29,7 +29,7 @@ export default {
 				},
 			},
 			{
-				method: "GET",
+				method: "POST",
 				path: "/auth/change-password",
 				handler: "auth.changePassword",
 				config: {
