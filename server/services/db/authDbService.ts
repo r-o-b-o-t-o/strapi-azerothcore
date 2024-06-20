@@ -31,8 +31,7 @@ export class AuthDbService extends DbServiceBase {
 		]);
 	}
 
-	public async createAccount(username: string, email: string, salt: Buffer, verifier: Buffer) {
-		const expansion = 2; // WotLK
+	public async createAccount(username: string, email: string, expansion: number, salt: Buffer, verifier: Buffer) {
 		await this.db.query(
 			"INSERT INTO account (username, email, reg_mail, salt, verifier, expansion, joindate) VALUES(UPPER(?), ?, ?, ?, ?, ?, NOW())",
 			[username, email, email, salt, verifier, expansion]

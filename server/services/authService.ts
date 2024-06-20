@@ -12,6 +12,7 @@ export class AuthService {
 	private strapi: Strapi;
 	private authDb: AuthDbService;
 	private readonly confirmationBanReason = "STRAPI-AZEROTHCORE_CONFIRMATION";
+	private readonly expansionWotlk = 2;
 
 	public constructor(strapi: Strapi) {
 		this.strapi = strapi;
@@ -85,7 +86,7 @@ export class AuthService {
 	public async createAccount(username: string, password: string, email: string) {
 		const salt = this.generateSalt();
 		const verifier = this.createVerifier(username, password, salt);
-		await this.db.createAccount(username, email, salt, verifier);
+		await this.db.createAccount(username, email, this.expansionWotlk, salt, verifier);
 		if (await this.isEmailConfirmationEnabled()) {
 			await this.db.banAccount(username, null, this.confirmationBanReason);
 		}
