@@ -2,33 +2,21 @@ import { DbServiceBase } from "./dbServiceBase";
 
 export class AuthDbService extends DbServiceBase {
 	public async isUsernameUsed(username: string) {
-		const [rows] = await this.db.query(
-			"SELECT COUNT(id) AS count FROM account WHERE username LIKE ?",
-			[username]
-		);
+		const [rows] = await this.db.query("SELECT COUNT(id) AS count FROM account WHERE username LIKE ?", [username]);
 		return rows[0].count > 0;
 	}
 
 	public async isEmailUsed(email: string) {
-		const [rows] = await this.db.query(
-			"SELECT COUNT(id) AS count FROM account WHERE email LIKE ?",
-			[email]
-		);
+		const [rows] = await this.db.query("SELECT COUNT(id) AS count FROM account WHERE email LIKE ?", [email]);
 		return rows[0].count > 0;
 	}
 
 	public async setEmail(username: string, email: string) {
-		await this.db.query("UPDATE account SET email = ? WHERE username LIKE ?", [
-			email,
-			username,
-		]);
+		await this.db.query("UPDATE account SET email = ? WHERE username LIKE ?", [email, username]);
 	}
 
 	public async setRegEmail(username: string, email: string) {
-		await this.db.query("UPDATE account SET reg_mail = ? WHERE username LIKE ?", [
-			email,
-			username,
-		]);
+		await this.db.query("UPDATE account SET reg_mail = ? WHERE username LIKE ?", [email, username]);
 	}
 
 	public async createAccount(username: string, email: string, expansion: number, salt: Buffer, verifier: Buffer) {
@@ -43,9 +31,7 @@ export class AuthDbService extends DbServiceBase {
 	}
 
 	public async deleteAccount(username: string) {
-		const [rows] = await this.db.query("SELECT id FROM account WHERE username LIKE ?", [
-			username,
-		]);
+		const [rows] = await this.db.query("SELECT id FROM account WHERE username LIKE ?", [username]);
 		if ((rows as any[]).length === 0) {
 			throw new Error(`Could not find account ${username}`);
 		}
@@ -55,9 +41,7 @@ export class AuthDbService extends DbServiceBase {
 	}
 
 	public async getAccountId(username: string) {
-		const [rows] = await this.db.query("SELECT id FROM account WHERE username LIKE ?", [
-			username,
-		]);
+		const [rows] = await this.db.query("SELECT id FROM account WHERE username LIKE ?", [username]);
 		if ((rows as any[]).length === 0) {
 			return null;
 		}
@@ -88,9 +72,6 @@ export class AuthDbService extends DbServiceBase {
 			return;
 		}
 
-		await this.db.query("DELETE FROM account_banned WHERE id = ? AND banreason = ?", [
-			accountId,
-			reason ?? "",
-		]);
+		await this.db.query("DELETE FROM account_banned WHERE id = ? AND banreason = ?", [accountId, reason ?? ""]);
 	}
 }

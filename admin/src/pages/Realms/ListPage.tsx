@@ -2,13 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Plus, Pencil, Trash, ExclamationMarkCircle } from "@strapi/icons";
-import {
-	LoadingIndicatorPage,
-	LinkButton,
-	useFetchClient,
-	onRowClick,
-	stopPropagation,
-} from "@strapi/helper-plugin";
+import { LoadingIndicatorPage, LinkButton, useFetchClient, onRowClick, stopPropagation } from "@strapi/helper-plugin";
 import {
 	Main,
 	HeaderLayout,
@@ -65,15 +59,9 @@ export default () => {
 		<Main>
 			<HeaderLayout
 				title="Realms"
-				subtitle={
-					isLoading || `${realms.length} realm${realms.length !== 1 ? "s" : ""} found`
-				}
+				subtitle={isLoading || `${realms.length} realm${realms.length !== 1 ? "s" : ""} found`}
 				primaryAction={
-					<LinkButton
-						to={`/plugins/${pluginId}/realms/edit`}
-						startIcon={<Plus />}
-						size="S"
-					>
+					<LinkButton to={`/plugins/${pluginId}/realms/edit`} startIcon={<Plus />} size="S">
 						Create realm
 					</LinkButton>
 				}
@@ -103,9 +91,7 @@ export default () => {
 										<Typography textColor="neutral800">{id}</Typography>
 									</Td>
 									<Td>
-										<Typography textColor="neutral800">
-											{realm?.name}
-										</Typography>
+										<Typography textColor="neutral800">{realm?.name}</Typography>
 									</Td>
 									<Td>
 										<Flex gap={1} justifyContent="end" {...stopPropagation}>

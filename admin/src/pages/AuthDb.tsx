@@ -2,22 +2,8 @@ import { Form, Formik } from "formik";
 import { Check } from "@strapi/icons";
 import { useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-	LoadingIndicatorPage,
-	useFetchClient,
-	useOverlayBlocker,
-	useNotification,
-} from "@strapi/helper-plugin";
-import {
-	Main,
-	Button,
-	HeaderLayout,
-	ContentLayout,
-	Grid,
-	GridItem,
-	TextInput,
-	Flex,
-} from "@strapi/design-system";
+import { LoadingIndicatorPage, useFetchClient, useOverlayBlocker, useNotification } from "@strapi/helper-plugin";
+import { Main, Button, HeaderLayout, ContentLayout, Grid, GridItem, TextInput, Flex } from "@strapi/design-system";
 
 import pluginId from "../pluginId";
 import { IDatabaseSettings } from "../../../server/services/settingsService";
@@ -95,23 +81,13 @@ export default () => {
 			{isLoading ? (
 				<LoadingIndicatorPage />
 			) : (
-				<Formik
-					innerRef={formikRef}
-					enableReinitialize
-					initialValues={formInitialValues}
-					onSubmit={onSubmit}
-				>
+				<Formik innerRef={formikRef} enableReinitialize initialValues={formInitialValues} onSubmit={onSubmit}>
 					{({ handleSubmit, values, handleChange, errors }) => (
 						<Form noValidate onSubmit={handleSubmit}>
 							<HeaderLayout
 								title="Auth Database"
 								primaryAction={
-									<Button
-										startIcon={<Check />}
-										size="S"
-										type="submit"
-										loading={mutation.isPending}
-									>
+									<Button startIcon={<Check />} size="S" type="submit" loading={mutation.isPending}>
 										Save
 									</Button>
 								}
@@ -185,10 +161,7 @@ export default () => {
 
 										<GridItem col={12}>
 											<Flex direction="row" gap={2}>
-												<Button
-													onClick={testConnection}
-													loading={isTestingConnection}
-												>
+												<Button onClick={testConnection} loading={isTestingConnection}>
 													Test Connection
 												</Button>
 											</Flex>

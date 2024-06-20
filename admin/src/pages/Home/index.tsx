@@ -4,15 +4,7 @@ import { Helmet } from "react-helmet";
 import { Route, Switch } from "react-router-dom";
 import Realms from "../Realms";
 import AuthDb from "../AuthDb";
-import {
-	Layout,
-	Main,
-	HeaderLayout,
-	ContentLayout,
-	Typography,
-	Box,
-	LinkButton,
-} from "@strapi/design-system";
+import { Layout, Main, HeaderLayout, ContentLayout, Typography, Box, LinkButton } from "@strapi/design-system";
 
 import "./index.css";
 
@@ -54,18 +46,10 @@ export default () => {
 							<Main>
 								<HeaderLayout title="AzerothCore" />
 								<ContentLayout>
-									<Box
-										shadow="tableShadow"
-										hasRadius
-										padding={6}
-										background="neutral0"
-									>
+									<Box shadow="tableShadow" hasRadius padding={6} background="neutral0">
 										<Typography>
 											<div>Welcome to the Strapi AzerothCore plugin!</div>
-											<div>
-												👈 Select a category on the left to start
-												configuring
-											</div>
+											<div>👈 Select a category on the left to start configuring</div>
 										</Typography>
 
 										<br />

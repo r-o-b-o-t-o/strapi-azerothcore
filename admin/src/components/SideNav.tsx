@@ -1,10 +1,4 @@
-import {
-	SubNav,
-	SubNavHeader,
-	SubNavLink,
-	SubNavSection,
-	SubNavSections,
-} from "@strapi/design-system/v2";
+import { SubNav, SubNavHeader, SubNavLink, SubNavSection, SubNavSections } from "@strapi/design-system/v2";
 import { NavLink } from "react-router-dom";
 
 interface IProperties {
