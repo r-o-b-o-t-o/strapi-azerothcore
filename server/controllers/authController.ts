@@ -3,6 +3,7 @@ import { errors } from "@strapi/utils";
 import { Strapi } from "@strapi/strapi";
 
 import { AzerothCorePlugin } from "../AzerothCorePlugin";
+import { UserActivityAction } from "../services/userService";
 
 const { ValidationError, ApplicationError, ForbiddenError } = errors;
 
@@ -70,6 +71,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 			await strapiAuthController.callback(ctx, next);
 		} catch (error) {
 			if (error.name === ValidationError.name) {
+				await AzerothCorePlugin.userService().saveActivity(
+					identifier,
+					UserActivityAction.LoginFailed,
+					ctx.request
+				);
 				return ctx.badRequest(error.message);
 			}
 			if (error.name === ApplicationError.name) {
@@ -81,6 +87,8 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 			console.error("Login failed", error);
 			return ctx.internalServerError("could not log in");
 		}
+
+		await AzerothCorePlugin.userService().saveActivity(identifier, UserActivityAction.LoggedIn, ctx.request);
 	},
 
 	async resetPassword(ctx: Context, next: Next) {
@@ -101,6 +109,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		await strapiAuthController.resetPassword(ctx, next);
 
 		await auth.changePassword(user.username, password);
+		await AzerothCorePlugin.userService().saveActivity(user, UserActivityAction.PasswordReset, ctx.request);
 	},
 
 	async changePassword(ctx: Context, next: Next) {
@@ -118,6 +127,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		await strapiAuthController.changePassword(ctx, next);
 
 		await auth.changePassword(user.username, password);
+		await AzerothCorePlugin.userService().saveActivity(user, UserActivityAction.ChangedPassword, ctx.request);
 	},
 
 	async changeEmail(ctx: Context, next: Next) {
@@ -158,5 +168,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 			const strapiAuthController = strapi.controller("plugin::users-permissions.auth");
 			await strapiAuthController.sendEmailConfirmation(ctx, next);
 		}
+
+		await AzerothCorePlugin.userService().saveActivity(user, UserActivityAction.ChangedEmail, ctx.request);
 	},
 });

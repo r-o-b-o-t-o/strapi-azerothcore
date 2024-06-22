@@ -1,4 +1,5 @@
 import pluginId from "./pluginId";
+import { UserService } from "./services/userService";
 import { AuthService } from "./services/authService";
 import { RealmsService } from "./services/realmsService";
 import { SettingsService } from "./services/settingsService";
@@ -22,6 +23,10 @@ export class AzerothCorePlugin {
 
 	public static settingsService() {
 		return this.plugin().service<SettingsService>("settings");
+	}
+
+	public static userService() {
+		return this.plugin().service<UserService>("user");
 	}
 
 	public static async load() {

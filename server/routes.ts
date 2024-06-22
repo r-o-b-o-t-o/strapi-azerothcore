@@ -1,5 +1,7 @@
+import userActivity from "./routes/userActivityRoutes";
+
 export default {
-	auth: {
+	content: {
 		type: "content-api",
 		routes: [
 			{
@@ -74,7 +76,7 @@ export default {
 		],
 	},
 
-	settings: {
+	admin: {
 		type: "admin",
 		routes: [
 			{
@@ -129,4 +131,6 @@ export default {
 			},
 		],
 	},
+
+	userActivity,
 };
