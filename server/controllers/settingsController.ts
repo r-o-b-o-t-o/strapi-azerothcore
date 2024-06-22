@@ -4,7 +4,7 @@ import { Strapi } from "@strapi/strapi";
 import { AzerothCorePlugin } from "../AzerothCorePlugin";
 import { SoapService } from "../services/soap/soapService";
 import { DbServiceBase } from "../services/db/dbServiceBase";
-import { IDatabaseSettings, IRealmSettings, ISoapSetings } from "../services/settingsService";
+import { IDatabaseSettings, IGeneralSettings, IRealmSettings, ISoapSetings } from "../services/settingsService";
 
 export default ({ strapi }: { strapi: Strapi }) => ({
 	async getSettings(ctx: Context, next: Next) {
@@ -12,9 +12,22 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		ctx.body = await settings.getSettings();
 	},
 
+	async getGeneralSettings(ctx: Context, next: Next) {
+		const settings = AzerothCorePlugin.settingsService();
+		ctx.body = (await settings.getSettings()).general ?? {};
+	},
+
+	async setGeneralSettings(ctx: Context, next: Next) {
+		const settings = AzerothCorePlugin.settingsService();
+		const data = (ctx.request as any).body as IGeneralSettings;
+		await settings.setGeneralSettings(data);
+		await AzerothCorePlugin.load();
+		ctx.status = 200;
+	},
+
 	async getAuthDbSettings(ctx: Context, next: Next) {
 		const settings = AzerothCorePlugin.settingsService();
-		ctx.body = (await settings.getSettings()).authDatabase;
+		ctx.body = (await settings.getSettings()).authDatabase ?? {};
 	},
 
 	async setAuthDbSettings(ctx: Context, next: Next) {

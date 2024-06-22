@@ -84,6 +84,16 @@ export default {
 			},
 			{
 				method: "GET",
+				path: "/settings/general",
+				handler: "settings.getGeneralSettings",
+			},
+			{
+				method: "PUT",
+				path: "/settings/general",
+				handler: "settings.setGeneralSettings",
+			},
+			{
+				method: "GET",
 				path: "/settings/authdb",
 				handler: "settings.getAuthDbSettings",
 			},

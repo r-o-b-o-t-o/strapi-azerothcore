@@ -27,7 +27,7 @@ export class AuthService {
 		return this.authDb;
 	}
 
-	public async validateUsername(username: string) {
+	public validateUsername(username: string) {
 		if (username === undefined || username.length === 0) {
 			throw new ValidationError("please enter your account name");
 		}
@@ -43,11 +43,11 @@ export class AuthService {
 			throw new ValidationError("account name must contain at least one letter");
 		}
 
-		if (await this.db.isUsernameUsed(username)) {
-			throw new ValidationError("this account name is already in use");
-		}
-
 		return true;
+	}
+
+	public async accountExists(username: string) {
+		return await this.db.isUsernameUsed(username);
 	}
 
 	public async validateEmail(email: string) {
@@ -81,6 +81,11 @@ export class AuthService {
 		}
 
 		return true;
+	}
+
+	public async verifyPassword(username: string, password: string) {
+		const { salt, verifier } = await this.db.getSaltAndVerifier(username);
+		return Buffer.compare(this.createVerifier(username, password, salt), verifier) === 0;
 	}
 
 	public async createAccount(username: string, password: string, email: string) {

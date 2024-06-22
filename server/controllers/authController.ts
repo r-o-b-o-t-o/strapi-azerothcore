@@ -12,25 +12,41 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		const auth = AzerothCorePlugin.authService();
 
 		try {
-			await auth.validateUsername(username);
+			auth.validateUsername(username);
 			await auth.validateEmail(email);
 			auth.validatePassword(password, repeatPassword);
 		} catch (error) {
 			return ctx.badRequest(error);
 		}
 
-		try {
-			await auth.createAccount(username, password, email); // Create the AzerothCore account
-		} catch (error) {
-			console.error("Account creation failed.", error);
-			return ctx.internalServerError("account creation failed");
+		const link = await auth.accountExists(username);
+		if (link) {
+			const settings = await AzerothCorePlugin.settingsService().getSettings();
+			if (!settings.general?.allowLinkingExistingGameAccount) {
+				return ctx.badRequest("this account name is already in use");
+			}
+
+			if (!(await auth.verifyPassword(username, password))) {
+				return ctx.badRequest("invalid password");
+			}
+		}
+
+		if (!link) {
+			try {
+				await auth.createAccount(username, password, email); // Create the AzerothCore account
+			} catch (error) {
+				console.error("Account creation failed.", error);
+				return ctx.internalServerError("account creation failed");
+			}
 		}
 
 		try {
 			const strapiAuthController = strapi.controller("plugin::users-permissions.auth");
 			await strapiAuthController.register(ctx, next); // Create the Strapi user with the regular auth controller
 		} catch (error) {
-			await auth.deleteAccount(username); // Rollback the AzerothCore account creation
+			if (!link) {
+				await auth.deleteAccount(username); // Rollback the AzerothCore account creation
+			}
 			console.error("Account creation failed.", error);
 			return ctx.internalServerError("account creation failed");
 		}

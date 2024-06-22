@@ -11,6 +11,17 @@ export class AuthDbService extends DbServiceBase {
 		return rows[0].count > 0;
 	}
 
+	public async getSaltAndVerifier(username: string) {
+		const [rows] = await this.db.query("SELECT salt, verifier FROM account WHERE username LIKE ?", [username]);
+		if ((rows as any[]).length === 0) {
+			return null;
+		}
+		return {
+			salt: rows[0].salt as Buffer,
+			verifier: rows[0].verifier as Buffer,
+		};
+	}
+
 	public async setEmail(username: string, email: string) {
 		await this.db.query("UPDATE account SET email = ? WHERE username LIKE ?", [email, username]);
 	}

@@ -2,6 +2,7 @@ import pluginId from "../../pluginId";
 import { SideNav } from "../../components/SideNav";
 import { Helmet } from "react-helmet";
 import { Route, Switch } from "react-router-dom";
+import General from "../General";
 import Realms from "../Realms";
 import AuthDb from "../AuthDb";
 import { Layout, Main, HeaderLayout, ContentLayout, Typography, Box, LinkButton } from "@strapi/design-system";
@@ -22,6 +23,11 @@ export default () => {
 								label: "Settings",
 								links: [
 									{
+										id: "strapi-azerothcore.generalSettings",
+										label: "General",
+										to: `/plugins/${pluginId}/general`,
+									},
+									{
 										id: "strapi-azerothcore.realmsSettings",
 										label: "Realms",
 										to: `/plugins/${pluginId}/realms`,
@@ -38,6 +44,7 @@ export default () => {
 				}
 			>
 				<Switch>
+					<Route path={`/plugins/${pluginId}/general`} component={General} />
 					<Route path={`/plugins/${pluginId}/realms`} component={Realms} />
 					<Route path={`/plugins/${pluginId}/auth-database`} component={AuthDb} />
 

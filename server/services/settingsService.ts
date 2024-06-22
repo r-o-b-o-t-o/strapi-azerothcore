@@ -2,6 +2,10 @@ import { Strapi } from "@strapi/strapi";
 
 import { AzerothCorePlugin } from "../AzerothCorePlugin";
 
+export interface IGeneralSettings {
+	allowLinkingExistingGameAccount: boolean;
+}
+
 export interface IDatabaseSettings {
 	host: string;
 	port: number;
@@ -24,6 +28,7 @@ export interface IRealmSettings {
 }
 
 export interface ISettings {
+	general: IGeneralSettings;
 	authDatabase: IDatabaseSettings;
 	realms: { [key: number]: IRealmSettings };
 }
@@ -39,6 +44,9 @@ export class SettingsService {
 
 	private defaultSettings(): ISettings {
 		return {
+			general: {
+				allowLinkingExistingGameAccount: false,
+			},
 			authDatabase: {
 				host: "localhost",
 				port: 3306,
@@ -88,6 +96,12 @@ export class SettingsService {
 
 	public async setSettings(settings: ISettings) {
 		await this.getPluginStore()?.set({ key: "settings", value: settings });
+	}
+
+	public async setGeneralSettings(data: IGeneralSettings) {
+		const settings = await this.getSettings();
+		settings.general = data;
+		await this.setSettings(settings);
 	}
 
 	public async setAuthDbSettings(data: IDatabaseSettings) {
