@@ -8,71 +8,43 @@ export default {
 				method: "POST",
 				path: "/auth/register",
 				handler: "auth.register",
-				config: {
-					policies: [],
-					auth: false,
-				},
 			},
 			{
 				method: "POST",
 				path: "/auth/login",
 				handler: "auth.login",
-				config: {
-					policies: [],
-					auth: false,
-				},
 			},
 			{
 				method: "POST",
 				path: "/auth/reset-password",
 				handler: "auth.resetPassword",
-				config: {
-					policies: [],
-					auth: false,
-				},
 			},
 			{
 				method: "POST",
 				path: "/auth/change-password",
 				handler: "auth.changePassword",
-				config: {
-					policies: [],
-				},
 			},
 			{
 				method: "POST",
 				path: "/auth/change-email",
 				handler: "auth.changeEmail",
-				config: {
-					policies: [],
-				},
 			},
 
 			{
 				method: "GET",
 				path: "/characters/:realm/my-characters",
 				handler: "characters.getMyCharacters",
-				config: {
-					policies: [],
-				},
 			},
 			{
 				method: "GET",
 				path: "/characters/:realm/my-guilds",
 				handler: "characters.getMyGuilds",
-				config: {
-					policies: [],
-				},
 			},
 
 			{
 				method: "GET",
 				path: "/realms",
 				handler: "realms.getRealms",
-				config: {
-					policies: [],
-					auth: false,
-				},
 			},
 		],
 	},
