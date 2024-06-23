@@ -144,6 +144,7 @@ You can customize the emails sent to your users here.
 Make sure to change the "Reset password page" and "Redirection url" links:
 
 -   **Reset password page**: when using the "forgot password" feature, an email is sent with the specified URL. Make sure to input a link to an existing page of your frontend, which needs to call the `reset-password` API endpoint.
+-   **Enable email confirmation**: enable this if you'd like the CMS to send a confirmation email when registering an account.
 -   **Redirection url**: when registering, a verification email is sent with a link that will redirect to the specified URL. Make sure to input a link to an existing page of your frontend, where you can notify the user that the account was successfully verified, for instance.
 
 ## 🔌 API endpoints
