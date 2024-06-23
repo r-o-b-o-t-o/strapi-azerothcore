@@ -258,7 +258,7 @@ Your frontend can query the following API endpoints:
 
 ### User Activity
 
--   **User Activity**
+-   **User Activity**  
     GET `/api/strapi-azerothcore/user-activity`  
     🔐 _Requires authentication_  
     💭 _You can use [query parameters](https://docs.strapi.io/dev-docs/api/rest/parameters) to control sorting and paging_  
