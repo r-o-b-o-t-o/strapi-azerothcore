@@ -1,9 +1,22 @@
-#strapi-azerothcore-github-btn .btn-container {
+.strapi-azerothcore-btn {
 	text-decoration: none;
+}
+
+.strapi-azerothcore-btn.has-logo > span {
+	line-height: 1;
+}
+
+.strapi-azerothcore-btn.has-logo .btn-text {
+	margin-left: 8px;
+}
+
+.strapi-azerothcore-btn .btn-content {
 	display: inline-flex;
 	align-items: center;
 }
 
-#strapi-azerothcore-github-btn .btn-text {
-	margin-left: 8px;
+.strapi-azerothcore-btn-row {
+	display: flex;
+	flex-direction: row;
+	gap: 1em;
 }
