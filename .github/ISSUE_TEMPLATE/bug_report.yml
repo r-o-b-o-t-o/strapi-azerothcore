@@ -37,7 +37,7 @@ body:
               3. Step 3
       validations:
           required: true
-    - type: textarea
+    - type: input
       id: server-specs
       attributes:
           label: Server operating system
@@ -45,7 +45,7 @@ body:
               What OS do you run Strapi on? (name, version, etc)
       validations:
           required: true
-    - type: textarea
+    - type: input
       id: client-specs
       attributes:
           label: Client operating system and browser
