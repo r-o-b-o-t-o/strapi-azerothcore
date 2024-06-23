@@ -83,4 +83,34 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 			ctx.internalServerError(error.message);
 		}
 	},
+
+	async checkPermissions(ctx: Context, next: Next) {
+		const issues = await AzerothCorePlugin.settingsService().checkPermissions();
+		ctx.send(issues);
+	},
+
+	async fixPermissions(ctx: Context, next: Next) {
+		const issues = await AzerothCorePlugin.settingsService().checkPermissions();
+
+		for (const entry of issues.extra) {
+			if (entry.id) {
+				await strapi.entityService?.delete("plugin::users-permissions.permission", entry.id);
+			}
+		}
+
+		for (const entry of issues.missing) {
+			const role = await strapi.query("plugin::users-permissions.role").findOne({ where: entry.role });
+
+			if (role) {
+				await strapi.entityService?.create("plugin::users-permissions.permission", {
+					data: {
+						action: entry.action,
+						role,
+					},
+				});
+			}
+		}
+
+		ctx.send({ success: true });
+	},
 });

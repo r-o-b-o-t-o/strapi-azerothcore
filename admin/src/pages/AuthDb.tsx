@@ -162,7 +162,7 @@ export default () => {
 										<GridItem col={12}>
 											<Flex direction="row" gap={2}>
 												<Button onClick={testConnection} loading={isTestingConnection}>
-													Test Connection
+													🔌 Test Connection
 												</Button>
 											</Flex>
 										</GridItem>

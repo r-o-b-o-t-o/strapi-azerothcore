@@ -5,6 +5,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import General from "../General";
 import Realms from "../Realms";
 import AuthDb from "../AuthDb";
+import Permissions from "../Permissions";
 import { Layout, Main, HeaderLayout, ContentLayout, Typography, Box, LinkButton } from "@strapi/design-system";
 
 import "./index.css";
@@ -50,6 +51,11 @@ export default () => {
 										label: "Auth Database",
 										to: `/plugins/${pluginId}/auth-database`,
 									},
+									{
+										id: "strapi-azerothcore.permissionsSettings",
+										label: "Permissions",
+										to: `/plugins/${pluginId}/permissions`,
+									},
 								],
 							},
 						]}
@@ -60,6 +66,7 @@ export default () => {
 					<Route path={`/plugins/${pluginId}/general`} component={General} />
 					<Route path={`/plugins/${pluginId}/realms`} component={Realms} />
 					<Route path={`/plugins/${pluginId}/auth-database`} component={AuthDb} />
+					<Route path={`/plugins/${pluginId}/permissions`} component={Permissions} />
 
 					<Route
 						path={`/plugins/${pluginId}/home`}

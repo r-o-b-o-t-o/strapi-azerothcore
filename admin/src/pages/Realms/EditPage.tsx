@@ -241,7 +241,7 @@ export default () => {
 														onClick={testCharsConnection}
 														loading={isTestingCharsConnection}
 													>
-														Test Connection
+														🔌 Test Connection
 													</Button>
 												</Flex>
 											</GridItem>
@@ -302,7 +302,7 @@ export default () => {
 														onClick={testSoapConnection}
 														loading={isTestingSoapConnection}
 													>
-														Test Connection
+														🔌 Test Connection
 													</Button>
 												</Flex>
 											</GridItem>

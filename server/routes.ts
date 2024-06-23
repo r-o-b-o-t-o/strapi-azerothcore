@@ -102,6 +102,16 @@ export default {
 				path: "/settings/test-soap-connection",
 				handler: "settings.testSoapConnection",
 			},
+			{
+				method: "GET",
+				path: "/settings/permissions/check",
+				handler: "settings.checkPermissions",
+			},
+			{
+				method: "POST",
+				path: "/settings/permissions/fix",
+				handler: "settings.fixPermissions",
+			},
 		],
 	},
 

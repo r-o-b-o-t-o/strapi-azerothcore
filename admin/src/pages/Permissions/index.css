@@ -1,0 +1,11 @@
+.strapi-azerothcore-permissions-list {
+	list-style: disc;
+}
+
+.strapi-azerothcore-permissions-list li {
+	margin-left: 2.5rem;
+}
+
+.strapi-azerothcore-permissions-monospace {
+	font-family: monospace;
+}
