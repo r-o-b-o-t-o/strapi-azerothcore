@@ -50,16 +50,7 @@ export default {
 
 			{
 				method: "GET",
-				path: "/realms",
-				handler: "realms.getRealms",
-				config: {
-					policies: [],
-					auth: false,
-				},
-			},
-			{
-				method: "GET",
-				path: "/characters/:realm/mine",
+				path: "/characters/:realm/my-characters",
 				handler: "characters.getMyCharacters",
 				config: {
 					policies: [],
@@ -67,10 +58,20 @@ export default {
 			},
 			{
 				method: "GET",
-				path: "/guilds/:realm/mine",
+				path: "/characters/:realm/my-guilds",
 				handler: "characters.getMyGuilds",
 				config: {
 					policies: [],
+				},
+			},
+
+			{
+				method: "GET",
+				path: "/realms",
+				handler: "realms.getRealms",
+				config: {
+					policies: [],
+					auth: false,
 				},
 			},
 		],
