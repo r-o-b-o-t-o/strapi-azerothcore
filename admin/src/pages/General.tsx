@@ -17,7 +17,7 @@ export default () => {
 		return data as IGeneralSettings;
 	};
 	const { data, isLoading, refetch } = useQuery({
-		queryKey: ["settings"],
+		queryKey: ["generalSettings"],
 		queryFn: getSettings,
 	});
 	const formikRef = useRef(null);

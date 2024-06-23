@@ -35,7 +35,7 @@ export default () => {
 		return data as IRealmSettings;
 	};
 	const { data, isLoading, refetch } = useQuery({
-		queryKey: ["realms", realmId],
+		queryKey: ["realmSettings", realmId],
 		queryFn: getRealm,
 	});
 	const [isTestingCharsConnection, setTestingCharsConnection] = useState(false);

@@ -17,7 +17,7 @@ export default () => {
 		return data as IDatabaseSettings;
 	};
 	const { data, isLoading, refetch } = useQuery({
-		queryKey: ["settings"],
+		queryKey: ["authDbSettings"],
 		queryFn: getSettings,
 	});
 	const [isTestingConnection, setTestingConnection] = useState(false);
