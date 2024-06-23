@@ -89,7 +89,7 @@ Each entry has the following settings:
 -   **User**: the MySQL user to connect with. Make sure that the user has access to the specified database.
 -   **Password**: the user's password
 
-You can press the "Test Connection" button to ensure Strapi is able to connect to your database properly.
+You can press the "🔌 Test Connection" button to ensure Strapi is able to connect to your database properly.
 
 #### SOAP
 
@@ -106,7 +106,7 @@ You can press the "Test Connection" button to ensure Strapi is able to connect t
     -   [See AzerothCore's wiki on account creation](https://www.azerothcore.org/wiki/creating-accounts) for more info
 -   **Password**: the SOAP account's password
 
-You can press the "Test Connection" button to ensure Strapi is able to connect to your AzerothCore server via SOAP properly.
+You can press the "🔌 Test Connection" button to ensure Strapi is able to connect to your AzerothCore server via SOAP properly.
 
 ### Auth Database
 
@@ -118,11 +118,22 @@ In the leftmost pane of the Strapi dashboard, go to "AzerothCore", then "Auth Da
 -   **User**: the MySQL user to connect with. Make sure that the user has access to the specified database.
 -   **Password**: the user's password
 
-You can press the "Test Connection" button to ensure Strapi is able to connect to your database properly.
+You can press the "🔌 Test Connection" button to ensure Strapi is able to connect to your database properly.
+
+### Permissions
+
+In the leftmost pane of the Strapi dashboard, go to "AzerothCore", then "Permissions" under the Settings category
+
+This page displays permission issues that would prevent standard usage of the AzerothCore plugin. Press the "🔨 Fix" button to fix the permissions.  
+Feel free to ignore the recommendations on this page if you know what you're doing and would like to disable some of the plugin's features via the permissions system.
 
 ### Users & permissions plugin
 
 In the leftmost pane of the Strapi dashboard, go to "⚙️ Settings", then visit the links under the "Users & permissions plugin" section:
+
+#### Roles
+
+This section allows you to manage which API endpoints are accessible for logged-in users ("Authenticated" role) and unauthenticated users ("Public" role).
 
 #### Email templates
 
