@@ -11,13 +11,13 @@ AzerothCore integration in Strapi CMS.
 -   **Login** with the same credentials as the in-game account
 -   **Password reset** and **password change**, which also change the in-game account password
 -   **Account confirmation**
--   **Linking** of CMS account when in-game account already exists
+-   **Linking** of CMS accounts for existing in-game accounts
 
 ## 📋✔️ Requirements
 
 -   [Node.js](https://nodejs.org/en/download/)
 -   An [AzerothCore](https://github.com/azerothcore/azerothcore-wotlk) server
--   A working [Strapi](https://strapi.io/) project, see [Quick Start Guide](https://docs.strapi.io/dev-docs/quick-start)
+-   A working [Strapi](https://strapi.io/) project, see the [Quick Start Guide](https://docs.strapi.io/dev-docs/quick-start)
 
 ## 🛠️ Installation
 
@@ -58,17 +58,21 @@ yarn build
 yarn develop
 ```
 
-## ⚙️ Setup
-
 The **AzerothCore** plugin should now appear in the left pane of your Strapi dashboard:
 ![Strapi dashboard left pane plugin](readme/left-pane-plugin.png)
 
+## ⚙️ Setup
+
 ### General settings
 
+In the leftmost pane of the Strapi dashboard, go to "AzerothCore", then "General" under the Settings category
+
 -   **Allow linking existing game accounts**  
-    Check this to enable creating CMS user accounts for existing AzerothCore accounts. The users with existing AzerothCore accounts will need to go through the registration process on your website and make sure to provide the account name and password they're using to log into the game server.
+    Check this to enable creating CMS user accounts for existing AzerothCore accounts. To use this feature, users will need to go through the registration process on your website and make sure to provide the account name and password they're using to log into the game server.
 
 ### Realms settings
+
+In the leftmost pane of the Strapi dashboard, go to "AzerothCore", then "Realms" under the Settings category
 
 This is where you define your different realms.  
 Typically you need to have one entry for each row in the `realmlist` table of your `acore_auth` database.
@@ -89,18 +93,24 @@ You can press the "Test Connection" button to ensure Strapi is able to connect t
 
 #### SOAP
 
--   **Host**: the hostname on which your AzerothCore worldserver is running. See `SOAP.IP` in your `worldserver.conf`.
--   **Port**: the port on which your AzerothCore worldserver is listening for SOAP connections, usually `7878`. See `SOAP.Port` in your `worldserver.conf`.
+-   **Host**: the hostname on which your AzerothCore `worldserver` is running.  
+    See `SOAP.IP` in your `worldserver.conf`.
+-   **Port**: the port on which your AzerothCore `worldserver` is listening for SOAP connections, usually `7878`.  
+    See `SOAP.Port` in your `worldserver.conf`.
 -   **Username**: the AzerothCore account name to connect with.  
     Make sure that the account has a security level of `3`:
-    -   If you don't have an account for SOAP already, type this command in the `worldserver` console: `account create soap mypassword` (change `soap` and `mypassword` to your liking, they are the account name and password, respectively)
-    -   Change the security level to `3` for your SOAP account by typing this command in the `worldserver` console: `account set gmlevel soap 3 -1` (change `soap` to the name of your SOAP account)
+    -   If you don't have an account for SOAP already, type this command in the `worldserver` console:  
+        `account create soap mypassword` (change `soap` and `mypassword` to your liking, they are the account name and password, respectively)
+    -   Change the security level to `3` for your SOAP account by typing this command in the `worldserver` console:  
+        `account set gmlevel soap 3 -1` (change `soap` to the name of your SOAP account)
     -   [See AzerothCore's wiki on account creation](https://www.azerothcore.org/wiki/creating-accounts) for more info
 -   **Password**: the SOAP account's password
 
 You can press the "Test Connection" button to ensure Strapi is able to connect to your AzerothCore server via SOAP properly.
 
 ### Auth Database
+
+In the leftmost pane of the Strapi dashboard, go to "AzerothCore", then "Auth Database" under the Settings category
 
 -   **Host**: the hostname on which your MySQL database server is running
 -   **Port**: the port on which your MySQL database server is listening, usually `3306`
@@ -112,7 +122,7 @@ You can press the "Test Connection" button to ensure Strapi is able to connect t
 
 ### Users & permissions plugin
 
-In the leftmost pane of the Strapi dashboard, click "⚙️ Settings", then visit the links from the "Users & permissions plugin" section:
+In the leftmost pane of the Strapi dashboard, go to "⚙️ Settings", then visit the links under the "Users & permissions plugin" section:
 
 #### Email templates
 
@@ -122,7 +132,7 @@ You can customize the emails sent to your users here.
 
 Make sure to change the "Reset password page" and "Redirection url" links:
 
--   **Reset password page**: when using the "forgot password" feature, an email is sent with the specified URL. Make sure to input a link to an existing page of your frontend, which needs to call the `reset-password` endpoint with a `code` contained as a query parameter in the link sent by email.
+-   **Reset password page**: when using the "forgot password" feature, an email is sent with the specified URL. Make sure to input a link to an existing page of your frontend, which needs to call the `reset-password` API endpoint.
 -   **Redirection url**: when registering, a verification email is sent with a link that will redirect to the specified URL. Make sure to input a link to an existing page of your frontend, where you can notify the user that the account was successfully verified, for instance.
 
 ## 🔌 API endpoints
@@ -204,7 +214,7 @@ Your frontend can query the following API endpoints:
     ```
 
     The `code` is from a link sent via email when using the `reset-password` endpoint.  
-    `password` is the new password to set, and `passwordConfirmation` must be the value of a repeat field in the form on your frontend.
+    `password` is the new password to set, and `passwordConfirmation` must be the value of a "repeat password" field in the form on your frontend.
 
 -   **Change Password**  
     POST `/api/strapi-azerothcore/auth/change-password`  
@@ -231,14 +241,14 @@ Your frontend can query the following API endpoints:
 ### Characters
 
 -   **My Characters**  
-    GET `/api/strapi-azerothcore/characters/:realm/my-characters`  
+    GET `/api/strapi-azerothcore/characters/:realmId/my-characters`  
     🔐 _Requires authentication_  
-    Returns data about the account's characters for a given `realm`
+    Returns data about the account's characters for a given realm
 
 -   **My Guilds**  
-    GET `/api/strapi-azerothcore/characters/:realm/my-guilds`  
+    GET `/api/strapi-azerothcore/characters/:realmId/my-guilds`  
     🔐 _Requires authentication_  
-    Returns data about the account's owned guilds for a given `realm`
+    Returns data about the account's owned guilds for a given realm
 
 ### Realms
 
@@ -251,8 +261,8 @@ Your frontend can query the following API endpoints:
 -   **User Activity**
     GET `/api/strapi-azerothcore/user-activity`  
     🔐 _Requires authentication_  
-    Returns data about activity for the account, such as logins, failed logins, password changes, etc.  
-    You can use [parameters](https://docs.strapi.io/dev-docs/api/rest/parameters) to control sorting and paging
+    💭 _You can use [query parameters](https://docs.strapi.io/dev-docs/api/rest/parameters) to control sorting and paging_  
+    Returns data about activity for the account, such as logins, failed logins, password changes, etc.
 
 ## 🤝 Contributing
 
