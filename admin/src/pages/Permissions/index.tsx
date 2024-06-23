@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { Cog } from "@strapi/icons";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingIndicatorPage, useFetchClient, useNotification } from "@strapi/helper-plugin";
-import { Main, Button, HeaderLayout, ContentLayout, Typography, Box } from "@strapi/design-system";
-
-import pluginId from "../../pluginId";
+import { Main, Button, HeaderLayout, ContentLayout, Typography, Box, Link } from "@strapi/design-system";
 import { IPermissionsCheck, IPermissionEntry } from "../../../../server/services/settingsService";
+import pluginId from "../../pluginId";
 
 import "./index.css";
 
@@ -65,6 +66,14 @@ export default () => {
 
 					<ContentLayout>
 						<Box shadow="tableShadow" hasRadius padding={6} background="neutral0">
+							<div>
+								<Link as={NavLink} to="/settings/users-permissions/roles" startIcon={<Cog />}>
+									Permissions plugin settings
+								</Link>
+								<br />
+								<br />
+							</div>
+
 							{data.extra.length === 0 && data.missing.length === 0 ? (
 								<div>
 									<Typography>✅ No permission issues found</Typography>
