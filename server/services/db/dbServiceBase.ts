@@ -3,7 +3,7 @@ import mysql from "mysql2/promise";
 import { IDatabaseSettings } from "../settingsService";
 
 export class DbServiceBase {
-	protected db: mysql.Pool;
+	public readonly db: mysql.Pool;
 
 	public constructor(settings: IDatabaseSettings) {
 		const { host, port, user, password, database } = settings;

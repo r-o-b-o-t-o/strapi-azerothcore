@@ -74,7 +74,7 @@ export class SoapService {
 }
 
 export class SoapServiceBase {
-	protected soap: SoapService;
+	public readonly soap: SoapService;
 
 	public constructor(soap: SoapService) {
 		this.soap = soap;
