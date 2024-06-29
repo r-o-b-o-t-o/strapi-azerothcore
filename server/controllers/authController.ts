@@ -30,9 +30,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 			if (!(await auth.verifyPassword(username, password))) {
 				return ctx.badRequest("invalid password");
 			}
-		}
-
-		if (!link) {
+		} else {
 			try {
 				await auth.createAccount(username, password, email); // Create the AzerothCore account
 			} catch (error) {
