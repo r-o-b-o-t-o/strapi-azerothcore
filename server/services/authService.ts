@@ -29,18 +29,25 @@ export class AuthService {
 
 	public validateUsername(username: string) {
 		if (username === undefined || username.length === 0) {
-			throw new ValidationError("please enter your account name");
+			throw new ValidationError("", {
+				username: "Please enter your account name",
+			});
 		}
 		if (username.length > 16) {
-			throw new ValidationError("account name must be at most 16 characters");
+			throw new ValidationError("", {
+				username: "Account name must be at most 16 characters",
+			});
 		}
 		if (/[^0-9a-zA-Z_-]/.test(username)) {
-			throw new ValidationError(
-				"account name must contain only non-accented latin letters, numbers, underscores (_) and dashes (-)"
-			);
+			throw new ValidationError("", {
+				username:
+					"Account name must contain only non-accented latin letters, numbers, underscores (_) and dashes (-)",
+			});
 		}
 		if (!/[a-zA-Z]/.test(username)) {
-			throw new ValidationError("account name must contain at least one letter");
+			throw new ValidationError("", {
+				username: "Account name must contain at least one letter",
+			});
 		}
 
 		return true;
@@ -52,10 +59,14 @@ export class AuthService {
 
 	public async validateEmail(email: string) {
 		if (email === undefined || email.length === 0) {
-			throw new ValidationError("please enter your email address");
+			throw new ValidationError("", {
+				email: "Please enter your email address",
+			});
 		}
 		if (await this.db.isEmailUsed(email)) {
-			throw new ValidationError("this email address is already in use");
+			throw new ValidationError("", {
+				email: "This email address is already in use",
+			});
 		}
 
 		return true;
@@ -63,21 +74,30 @@ export class AuthService {
 
 	public validatePassword(password: string, passwordRepeat: string) {
 		if (password === undefined || password.length === 0) {
-			throw new ValidationError("please enter your password");
+			throw new ValidationError("", {
+				password: "Please enter your password",
+			});
 		}
 		if (passwordRepeat === undefined || passwordRepeat.length === 0) {
-			throw new ValidationError("please repeat your password");
+			throw new ValidationError("", {
+				repeatPassword: "Please repeat your password",
+			});
 		}
 		if (password.length > 16) {
-			throw new ValidationError("password must be at most 16 characters");
+			throw new ValidationError("", {
+				password: "Password must be at most 16 characters",
+			});
 		}
 		if (/[^a-zA-Z0-9!@#\$%\^\&*\)\(\[\]~'"\\{}+=,?;:/<>._-]/.test(password)) {
-			throw new ValidationError(
-				"password must contain only non-accented latin letters, numbers and special characters"
-			);
+			throw new ValidationError("", {
+				password: "Password must contain only non-accented latin letters, numbers and special characters",
+			});
 		}
 		if (password !== passwordRepeat) {
-			throw new ValidationError("passwords do not match");
+			throw new ValidationError("", {
+				password: "Passwords do not match",
+				repeatPassword: "Passwords do not match",
+			});
 		}
 
 		return true;

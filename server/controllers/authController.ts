@@ -12,30 +12,46 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		const { username, email, password, repeatPassword } = (ctx.request as any).body;
 		const auth = AzerothCorePlugin.authService();
 
+		if (await AzerothCorePlugin.userService().findByUsernameOrEmail(email)) {
+			return (ctx as any).badRequest("", {
+				email: "This email address is already in use",
+			});
+		}
+
+		if (await AzerothCorePlugin.userService().findByUsernameOrEmail(username)) {
+			return (ctx as any).badRequest("", {
+				username: "This account name is already in use",
+			});
+		}
+
 		try {
 			auth.validateUsername(username);
 			await auth.validateEmail(email);
 			auth.validatePassword(password, repeatPassword);
 		} catch (error) {
-			return ctx.badRequest(error);
+			return (ctx as any).badRequest(error.message, error.details);
 		}
 
 		const link = await auth.accountExists(username);
 		if (link) {
 			const settings = await AzerothCorePlugin.settingsService().getSettings();
 			if (!settings.general?.allowLinkingExistingGameAccount) {
-				return ctx.badRequest("this account name is already in use");
+				return (ctx as any).badRequest("", {
+					username: "This account name is already in use",
+				});
 			}
 
 			if (!(await auth.verifyPassword(username, password))) {
-				return ctx.badRequest("invalid password");
+				return (ctx as any).badRequest("", {
+					password: "Invalid password",
+				});
 			}
 		} else {
 			try {
 				await auth.createAccount(username, password, email); // Create the AzerothCore account
 			} catch (error) {
 				console.error("Account creation failed.", error);
-				return ctx.internalServerError("account creation failed");
+				return ctx.internalServerError("Account creation failed");
 			}
 		}
 
@@ -47,7 +63,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 				await auth.deleteAccount(username); // Rollback the AzerothCore account creation
 			}
 			console.error("Account creation failed.", error);
-			return ctx.internalServerError("account creation failed");
+			return (ctx as any).internalServerError(error.message, error.details);
 		}
 
 		// Update the account row with the email address
@@ -58,10 +74,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 	async login(ctx: Context, next: Next) {
 		const { identifier, password } = (ctx.request as any).body;
 		if (!identifier?.trim()) {
-			return ctx.badRequest("please enter your account name or email address");
+			return (ctx as any).badRequest("", {
+				identifier: "Please enter your account name or email address",
+			});
 		}
 		if (!password?.trim()) {
-			return ctx.badRequest("please enter your password");
+			return (ctx as any).badRequest("", {
+				password: "Please enter your password",
+			});
 		}
 
 		try {
@@ -74,7 +94,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 					UserActivityAction.LoginFailed,
 					ctx.request
 				);
-				return ctx.badRequest(error.message);
+				return (ctx as any).badRequest(error.message, error.details);
 			}
 			if (error.name === ApplicationError.name) {
 				return ctx.internalServerError(error.message);
@@ -83,7 +103,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 				return ctx.forbidden(error.message);
 			}
 			console.error("Login failed", error);
-			return ctx.internalServerError("could not log in");
+			return ctx.internalServerError("Could not log in");
 		}
 
 		await AzerothCorePlugin.userService().saveActivity(identifier, UserActivityAction.LoggedIn, ctx.request);
@@ -118,7 +138,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		try {
 			auth.validatePassword(password, passwordConfirmation);
 		} catch (error) {
-			return ctx.badRequest(error);
+			return (ctx as any).badRequest(error.message, error.details);
 		}
 
 		const strapiAuthController = strapi.controller("plugin::users-permissions.auth");
@@ -133,27 +153,27 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		const { user } = ctx.state;
 
 		if (!email) {
-			return ctx.badRequest("please enter the new email address");
+			return (ctx as any).badRequest("", {
+				email: "Please enter the new email address",
+			});
 		}
 		if (email === user.email) {
-			return ctx.badRequest("the new email address must be different from your current email address");
+			return (ctx as any).badRequest("", {
+				email: "The new email address must be different from your current email address",
+			});
 		}
 
 		const auth = AzerothCorePlugin.authService();
 		try {
 			await auth.validateEmail(email);
 		} catch (error) {
-			return ctx.badRequest(error);
+			return (ctx as any).badRequest(error.message, error.details);
 		}
 
-		const conflictingUserCount = await strapi.query("plugin::users-permissions.user").count({
-			where: {
-				$or: [{ email: email.toLowerCase() }, { username: email.toLowerCase() }],
-				provider: "email",
-			},
-		});
-		if (conflictingUserCount > 0) {
-			return ctx.badRequest("this email address is already in use");
+		if (await AzerothCorePlugin.userService().findByUsernameOrEmail(email)) {
+			return (ctx as any).badRequest("", {
+				email: "This email address is already in use",
+			});
 		}
 
 		await strapi.plugin("users-permissions").service("user").edit(user.id, {
