@@ -88,6 +88,11 @@ export class AuthService {
 				password: "Password must be at most 16 characters",
 			});
 		}
+		if (password.length < 6) {
+			throw new ValidationError("", {
+				password: "Password must be at least 6 characters",
+			});
+		}
 		if (/[^a-zA-Z0-9!@#\$%\^\&*\)\(\[\]~'"\\{}+=,?;:/<>._-]/.test(password)) {
 			throw new ValidationError("", {
 				password: "Password must contain only non-accented latin letters, numbers and special characters",
