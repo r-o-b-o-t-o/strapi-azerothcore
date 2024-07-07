@@ -149,10 +149,6 @@ export class AuthService {
 
 	public async changeEmail(username: string, newEmail: string) {
 		await this.db.setEmail(username, newEmail);
-
-		if (await this.isEmailConfirmationEnabled()) {
-			await this.unconfirmAccount(username);
-		}
 	}
 
 	private createVerifier(username: string, password: string, salt?: Buffer): Buffer {

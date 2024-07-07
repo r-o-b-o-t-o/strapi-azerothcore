@@ -176,16 +176,19 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 			});
 		}
 
-		await strapi.plugin("users-permissions").service("user").edit(user.id, {
-			email,
-			confirmed: false,
-		});
-		await auth.changeEmail(user.username, email);
-
 		if (await auth.isEmailConfirmationEnabled()) {
 			const strapiAuthController = strapi.controller("plugin::users-permissions.auth");
 			await strapiAuthController.sendEmailConfirmation(ctx, next);
+
+			await strapi.plugin("users-permissions").service("user").edit(user.id, {
+				confirmed: false,
+			});
+			await auth.unconfirmAccount(user.username);
 		}
+		await strapi.plugin("users-permissions").service("user").edit(user.id, {
+			email,
+		});
+		await auth.changeEmail(user.username, email);
 
 		await AzerothCorePlugin.userService().saveActivity(user, UserActivityAction.ChangedEmail, ctx.request);
 	},
