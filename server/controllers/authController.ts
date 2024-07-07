@@ -116,7 +116,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		try {
 			auth.validatePassword(password, passwordConfirmation);
 		} catch (error) {
-			return ctx.badRequest(error);
+			return (ctx as any).badRequest(error.message, error.details);
 		}
 
 		const user = await strapi
