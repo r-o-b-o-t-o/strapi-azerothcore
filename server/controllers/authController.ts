@@ -131,10 +131,17 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 	},
 
 	async changePassword(ctx: Context, next: Next) {
-		const { password, passwordConfirmation } = (ctx.request as any).body;
+		const { currentPassword, password, passwordConfirmation } = (ctx.request as any).body;
 		const { user } = ctx.state;
 
 		const auth = AzerothCorePlugin.authService();
+
+		if (!(await auth.verifyPassword(user.username, currentPassword))) {
+			return (ctx as any).badRequest("", {
+				currentPassword: "Invalid password",
+			});
+		}
+
 		try {
 			auth.validatePassword(password, passwordConfirmation);
 		} catch (error) {
