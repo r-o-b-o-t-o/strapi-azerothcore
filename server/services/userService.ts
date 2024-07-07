@@ -44,7 +44,7 @@ export class UserService {
 				user,
 				action,
 				ipAddress: request.ip,
-				userAgent: `${browser} on ${os}`,
+				userAgent: browser && os ? `${browser} on ${os}` : "",
 			},
 		});
 	}
