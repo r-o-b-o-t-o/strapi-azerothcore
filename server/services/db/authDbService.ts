@@ -68,6 +68,24 @@ export class AuthDbService extends DbServiceBase {
 		return id as number;
 	}
 
+	public async getAccountEmail(username: string) {
+		const [rows] = await this.db.query("SELECT email FROM account WHERE username LIKE ?", [username]);
+		if ((rows as any[]).length === 0) {
+			return null;
+		}
+		const { email } = rows[0];
+		return email as string;
+	}
+
+	public async getAccountNameWithEmail(email: string) {
+		const [rows] = await this.db.query("SELECT username FROM account WHERE email LIKE ?", [email]);
+		if ((rows as any[]).length === 0) {
+			return null;
+		}
+		const { username } = rows[0];
+		return username as string;
+	}
+
 	public async banAccount(username: string, unbanDate?: Date, reason?: string) {
 		const accountId = await this.getAccountId(username);
 		if (!accountId) {

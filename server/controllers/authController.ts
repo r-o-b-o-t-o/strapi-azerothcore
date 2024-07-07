@@ -84,6 +84,62 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 			});
 		}
 
+		const settings = await AzerothCorePlugin.settingsService().getSettings();
+		if (settings.general?.allowLinkingExistingGameAccount) {
+			// Register CMS account if an AzerothCore account is found with a correct email address
+			const user = await AzerothCorePlugin.userService().findByUsernameOrEmail(identifier);
+			if (!user) {
+				const auth = AzerothCorePlugin.authService();
+				let username: string | null = null;
+				let email: string | null = null;
+				if (await auth.accountExists(identifier)) {
+					username = identifier;
+					const emailFound = await auth.db.getAccountEmail(identifier);
+					if (emailFound) {
+						email = emailFound.trim();
+					}
+				} else {
+					email = identifier;
+					const nameFound = await auth.db.getAccountNameWithEmail(identifier);
+					if (nameFound) {
+						username = nameFound.trim();
+					}
+				}
+
+				if (username && email) {
+					try {
+						if (!(await auth.verifyPassword(username, password))) {
+							return (ctx as any).badRequest("", {
+								password: "Invalid password",
+							});
+						}
+
+						const authSettings = strapi.store?.({ type: "plugin", name: "users-permissions" });
+						const advancedSettings = await authSettings?.get({ key: "advanced" });
+						const role = await strapi
+							.query("plugin::users-permissions.role")
+							.findOne({ where: { type: (advancedSettings as any)?.default_role } });
+						if (!role) {
+							throw new ApplicationError("Could not find default role");
+						}
+
+						const newUser = {
+							provider: "local",
+							role: role.id,
+							email: email.toLowerCase(),
+							username,
+							password,
+							confirmed: true,
+						};
+						await strapi.plugin("users-permissions").service("user").add(newUser);
+					} catch (error) {
+						console.error("Account linking failed.", error);
+						return (ctx as any).internalServerError(error.message, error.details);
+					}
+				}
+			}
+		}
+
 		try {
 			const strapiAuthController = strapi.controller("plugin::users-permissions.auth");
 			await strapiAuthController.callback(ctx, next);
