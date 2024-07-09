@@ -11,10 +11,13 @@ interface ICommandResult {
 	detail?: string;
 }
 
-export class SoapError extends Error {
+export class SoapError {
+	public readonly name: string;
+	public readonly message: string;
+
 	public constructor(message?: string) {
-		super(message);
 		this.name = "SoapError";
+		this.message = message;
 	}
 }
 
