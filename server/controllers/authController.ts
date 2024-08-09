@@ -1,6 +1,7 @@
 import { Context, Next } from "koa";
 import { errors } from "@strapi/utils";
 import { Strapi } from "@strapi/strapi";
+import crypto from "crypto";
 
 import { AzerothCorePlugin } from "../AzerothCorePlugin";
 import { UserActivityAction } from "../services/userService";
@@ -163,6 +164,51 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 		}
 
 		await AzerothCorePlugin.userService().saveActivity(identifier, UserActivityAction.LoggedIn, ctx.request);
+	},
+
+	async forgotPassword(ctx: Context, next: Next) {
+		const { email } = (ctx.request as any).body;
+		if (!email?.trim()) {
+			return (ctx as any).badRequest("", {
+				email: "Please enter your email address",
+			});
+		}
+
+		const auth = AzerothCorePlugin.authService();
+		const settings = await AzerothCorePlugin.settingsService().getSettings();
+		const user = await strapi
+			.query("plugin::users-permissions.user")
+			.findOne({ where: { email: email.toLowerCase() } });
+		if (!user && settings.general?.allowLinkingExistingGameAccount && (await auth.db.isEmailUsed(email))) {
+			// Register CMS account if an AzerothCore account is found with a correct email address
+			const username = await auth.db.getAccountNameWithEmail(email);
+
+			try {
+				const authSettings = strapi.store?.({ type: "plugin", name: "users-permissions" });
+				const advancedSettings = await authSettings?.get({ key: "advanced" });
+				const role = await strapi
+					.query("plugin::users-permissions.role")
+					.findOne({ where: { type: (advancedSettings as any)?.default_role } });
+				if (!role) {
+					throw new ApplicationError("Could not find default role");
+				}
+
+				await strapi.plugin("users-permissions").service("user").add({
+					provider: "local",
+					role: role.id,
+					email: email.toLowerCase(),
+					username,
+					password: crypto.randomBytes(32).toString("hex"), // Random temporary password before it gets reset
+					confirmed: true,
+				});
+			} catch (error) {
+				console.error("Account linking failed.", error);
+				return (ctx as any).internalServerError(error.message, error.details);
+			}
+		}
+
+		const strapiAuthController = strapi.controller("plugin::users-permissions.auth");
+		await strapiAuthController.forgotPassword(ctx, next);
 	},
 
 	async resetPassword(ctx: Context, next: Next) {

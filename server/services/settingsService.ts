@@ -183,6 +183,7 @@ export class SettingsService {
 			{ action: "plugin::users-permissions.auth.changePassword", role: { type: "public" } },
 			{ action: "plugin::users-permissions.auth.connect", role: { type: "public" } },
 			{ action: "plugin::users-permissions.auth.register", role: { type: "public" } },
+			{ action: "plugin::users-permissions.auth.forgotPassword", role: { type: "public" } },
 			{ action: "plugin::users-permissions.auth.resetPassword", role: { type: "public" } },
 
 			{ action: "plugin::users-permissions.auth.callback", role: { type: "authenticated" } },
@@ -199,6 +200,7 @@ export class SettingsService {
 
 			{ action: "plugin::strapi-azerothcore.auth.login", role: { type: "authenticated" } },
 			{ action: "plugin::strapi-azerothcore.auth.register", role: { type: "authenticated" } },
+			{ action: "plugin::strapi-azerothcore.auth.forgotPassword", role: { type: "authenticated" } },
 			{ action: "plugin::strapi-azerothcore.auth.resetPassword", role: { type: "authenticated" } },
 
 			{ action: "plugin::strapi-azerothcore.user-activity.create", role: { type: "public" } },
@@ -214,11 +216,11 @@ export class SettingsService {
 		];
 
 		const toCreate = [
-			{ action: "plugin::users-permissions.auth.forgotPassword", role: { type: "public" } },
 			{ action: "plugin::users-permissions.auth.sendEmailConfirmation", role: { type: "public" } },
 
 			{ action: "plugin::strapi-azerothcore.auth.login", role: { type: "public" } },
 			{ action: "plugin::strapi-azerothcore.auth.register", role: { type: "public" } },
+			{ action: "plugin::strapi-azerothcore.auth.forgotPassword", role: { type: "public" } },
 			{ action: "plugin::strapi-azerothcore.auth.resetPassword", role: { type: "public" } },
 
 			{ action: "plugin::strapi-azerothcore.realms.getRealms", role: { type: "public" } },

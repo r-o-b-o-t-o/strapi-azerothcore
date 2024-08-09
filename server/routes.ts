@@ -16,6 +16,11 @@ export default {
 			},
 			{
 				method: "POST",
+				path: "/auth/forgot-password",
+				handler: "auth.forgotPassword",
+			},
+			{
+				method: "POST",
 				path: "/auth/reset-password",
 				handler: "auth.resetPassword",
 			},
