@@ -193,14 +193,17 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 					throw new ApplicationError("Could not find default role");
 				}
 
-				await strapi.plugin("users-permissions").service("user").add({
-					provider: "local",
-					role: role.id,
-					email: email.toLowerCase(),
-					username,
-					password: crypto.randomBytes(32).toString("hex"), // Random temporary password before it gets reset
-					confirmed: true,
-				});
+				await strapi
+					.plugin("users-permissions")
+					.service("user")
+					.add({
+						provider: "local",
+						role: role.id,
+						email: email.toLowerCase(),
+						username,
+						password: crypto.randomBytes(32).toString("hex"), // Random temporary password before it gets reset
+						confirmed: true,
+					});
 			} catch (error) {
 				console.error("Account linking failed.", error);
 				return (ctx as any).internalServerError(error.message, error.details);
