@@ -180,7 +180,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 			.query("plugin::users-permissions.user")
 			.findOne({ where: { email: email.toLowerCase() } });
 		if (!user && settings.general?.allowLinkingExistingGameAccount && (await auth.db.isEmailUsed(email))) {
-			// Register CMS account if an AzerothCore account is found with a correct email address
+			// Register CMS account if it doesn't exist and an AzerothCore account is found with this email address
 			const username = await auth.db.getAccountNameWithEmail(email);
 
 			try {
