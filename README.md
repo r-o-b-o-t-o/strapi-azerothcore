@@ -68,7 +68,7 @@ The **AzerothCore** plugin should now appear in the left pane of your Strapi das
 In the leftmost pane of the Strapi dashboard, go to "AzerothCore", then "General" under the Settings category
 
 -   **Allow linking existing game accounts**  
-    Check this to enable creating CMS user accounts for existing AzerothCore accounts. To use this feature, users will need to go through the registration process on your website and make sure to provide the account name and password they're using to log into the game server.
+    Check this to enable creating CMS user accounts for existing AzerothCore accounts. To use this feature, users will need to go through the registration process on your website and make sure to provide the account name and password they're using to log into the game server. They can also use the "forgot password" feature and provide their email address if it's registered in the AzerothCore `account` table under the `email` column.
 
 ### Realms settings
 
@@ -205,7 +205,7 @@ Your frontend can query the following API endpoints:
     Use the provided [`jwt`](https://en.wikipedia.org/wiki/JSON_Web_Token) in the `Authorization` header (`Authorization: Bearer <your jwt>` without the brackets) for the endpoints that need authentication.
 
 -   **Forgot Password**  
-    POST `/api/auth/forgot-password`  
+    POST `/api/strapi-azerothcore/auth/forgot-password`  
     This will send an email to the provided email address if a user is found. The email will contain a link with a `code` as a query parameter (`?code=xxxxx`) which is needed for the `reset-password` endpoint.
 
     ```json
